@@ -187,4 +187,8 @@
     <!-- SuperZoom -->
     <string name="pref_superzoom_title">Magnify</string>
     <string name="pref_superzoom_default" translatable="false">off</string>
+
+    <!-- More Settings screen, fullscreen viewfinder title -->
+    <string name="pref_camera_fullscreen_viewfinder_title">Fullscreen viewfinder</string>
+    <string name="pref_camera_fullscreen_viewfinder_default" translatable="false">off</string>
 </resources>

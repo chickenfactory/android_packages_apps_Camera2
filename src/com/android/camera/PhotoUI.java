@@ -132,6 +132,7 @@ public class PhotoUI implements PieListener,
     private boolean mAspectRatioResize;
 
     private boolean mOrientationResize;
+    private boolean mFullscreenViewfinder;
     private boolean mPrevOrientationResize;
     private View mPreviewCover;
     private final Object mSurfaceTextureLock = new Object();
@@ -283,11 +284,19 @@ public class PhotoUI implements PieListener,
         mMatrix = mTextureView.getTransform(mMatrix);
         float scaleX = 1f, scaleY = 1f;
         float scaledTextureWidth, scaledTextureHeight;
-        if (mOrientationResize){
+        if (mOrientationResize || (!mFullscreenViewfinder && width > height)) {
             scaledTextureWidth = height * mAspectRatio;
-            if(scaledTextureWidth > width){
+            if(scaledTextureWidth > width) {
                 scaledTextureWidth = width;
                 scaledTextureHeight = scaledTextureWidth / mAspectRatio;
+            } else {
+                scaledTextureHeight = height;
+            }
+        } else if (!mFullscreenViewfinder) {
+            scaledTextureWidth = height / mAspectRatio;
+            if(scaledTextureWidth > width) {
+                scaledTextureWidth = width;
+                scaledTextureHeight = scaledTextureWidth * mAspectRatio;
             } else {
                 scaledTextureHeight = height;
             }
@@ -400,6 +409,10 @@ public class PhotoUI implements PieListener,
             mGestures = new PreviewGestures(mActivity, this, mZoomRenderer, mPieRenderer);
             mRenderOverlay.setGestures(mGestures);
         }
+        String FullscreenViewfinder = prefs.getString(CameraSettings.KEY_FULLSCREEN_VIEWFINDER,
+                mActivity.getResources().getString(
+                R.string.pref_camera_fullscreen_viewfinder_default));
+        mFullscreenViewfinder = FullscreenViewfinder.equals(CameraSettings.VALUE_ON);
         mGestures.setZoomEnabled(params.isZoomSupported());
         mGestures.setRenderOverlay(mRenderOverlay);
         mRenderOverlay.requestLayout();
@@ -999,6 +1012,12 @@ public class PhotoUI implements PieListener,
                 break;
         }
         mBurstModeView.setVisibility(View.VISIBLE);
+    }
+
+    public void updateFullscreenViewfinder(String on) {
+        mFullscreenViewfinder = on.equals(CameraSettings.VALUE_ON);
+        mAspectRatioResize = true;
+        mTextureView.requestLayout();
     }
 }
 

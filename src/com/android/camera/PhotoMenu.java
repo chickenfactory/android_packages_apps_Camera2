@@ -250,6 +250,7 @@ public class PhotoMenu extends PieController
                 CameraSettings.KEY_DENOISE,
                 CameraSettings.KEY_BURST_MODE,
                 CameraSettings.KEY_HISTOGRAM,
+                CameraSettings.KEY_FULLSCREEN_VIEWFINDER,
                 CameraSettings.KEY_SUPERZOOM
         };
         item = makeItem(R.drawable.ic_settings_holo_light);
@@ -344,6 +345,8 @@ public class PhotoMenu extends PieController
             setPreference(CameraSettings.KEY_CAMERA_HDR, mSettingOff);
             setPreference(CameraSettings.KEY_SLOW_SHUTTER, mSettingOff);
             mUI.updateBurstModeIcon(Integer.valueOf(pref.getValue()));
+        } else if (pref.getKey().equals(CameraSettings.KEY_FULLSCREEN_VIEWFINDER)) {
+            mUI.updateFullscreenViewfinder(pref.getValue());
         }
         super.onSettingChanged(pref);
     }
